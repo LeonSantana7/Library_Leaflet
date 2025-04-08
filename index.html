@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rota CIMATEC -> Mussurunga</title>
+
+    <!-- CSS Leaflet -->
+    <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css">
+    <!-- CSS Leaflet Routing Machine -->
+    <link rel="stylesheet" href="./node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.css">
+
+    <!-- JS Leaflet -->
+    <script src="./node_modules/leaflet/dist/leaflet.js"></script>
+    <!-- JS Leaflet Routing Machine -->
+    <script src="./node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+    <style>
+        #map {
+            height: 640px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        const cimatec = [-12.9389, -38.3864];
+        const mussurunga = [-12.9121, -38.3756];
+
+        const map = L.map('map').setView(cimatec, 14);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        const marker = L.marker(cimatec).addTo(map);
+        marker.bindPopup("<b>Bem-vindos ao SENAI CIMATEC!</b>").openPopup();
+
+        // Rota 
+        L.Routing.control({
+            waypoints: [
+                L.latLng(cimatec),
+                L.latLng(mussurunga)
+            ],
+            lineOptions: {
+                styles: [{ color: 'blue', weight: 4, dashArray: '8, 8' }]
+            },
+            altLineOptions: {
+                styles: [{ color: 'gray', weight: 4, opacity: 0.6, dashArray: '4, 6' }]
+            },
+            draggableWaypoints: true,
+            addWaypoints: true,
+            routeWhileDragging: true,
+            showAlternatives: true
+        }).addTo(map);
+
+        const popup = L.popup();
+        map.on('click', function (e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("Você clicou no mapa em " + e.latlng.toString())
+                .openOn(map);
+        });
+    </script>
+</body>
+
+</html>
